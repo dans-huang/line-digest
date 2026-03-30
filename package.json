@@ -1,0 +1,30 @@
+{
+  "name": "line-digest",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "tsx --watch src/main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "login": "tsx src/main.ts --login",
+    "test": "tsx --test src/**/*.test.ts",
+    "validate": "tsx src/validate-send-to-self.ts"
+  },
+  "dependencies": {
+    "@evex/linejs": "npm:@jsr/evex__linejs@^2.3.7",
+    "better-sqlite3": "^11.0.0",
+    "dotenv": "^17.3.1",
+    "node-cron": "^3.0.3",
+    "qrcode-terminal": "^0.12.0",
+    "undici": "^6.24.1",
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.0.0",
+    "@types/node-cron": "^3.0.11",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

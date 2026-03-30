@@ -1,0 +1,9 @@
+node_modules/
+dist/
+/data/
+.env
+users/*/.env
+users/*/data/*
+!users/*/data/.gitkeep
+users/
+users/

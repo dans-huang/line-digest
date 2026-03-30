@@ -1,0 +1,24 @@
+# docker-compose.yml
+# Each user gets their own service with isolated data volume.
+# To add a user: copy a service block, update paths, run --login.
+#
+# Usage:
+#   docker compose run --rm digest-wife node dist/main.js --login
+#   docker compose up -d digest-wife
+
+services:
+  digest-wife:
+    build: .
+    volumes:
+      - ./users/wife/data:/app/data
+      - ./users/wife/config.yaml:/app/config.yaml:ro
+    env_file: ./users/wife/.env
+    restart: unless-stopped
+
+  # digest-friend1:
+  #   build: .
+  #   volumes:
+  #     - ./users/friend1/data:/app/data
+  #     - ./users/friend1/config.yaml:/app/config.yaml:ro
+  #   env_file: ./users/friend1/.env
+  #   restart: unless-stopped

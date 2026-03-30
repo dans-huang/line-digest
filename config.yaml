@@ -1,0 +1,16 @@
+line:
+  device: "IOSIPAD"
+  authTokenPath: ./data/line-auth.json
+  storagePath: ./data/storage.json
+
+digest:
+  schedule: "0 8 * * *"
+  timezone: "Asia/Taipei"
+  defaultHours: 12
+
+store:
+  dbPath: ./data/messages.db
+  retentionDays: 30
+
+health:
+  intervalMs: 3600000
