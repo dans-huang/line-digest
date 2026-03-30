@@ -2,7 +2,7 @@
 
 > 每天早上一頁看完所有 LINE 訊息。不用換 APP，不用改習慣。
 
-LINE 是台灣人的生活基礎設施。2,200 萬月活用戶，71% 用它工作。但每天打開 LINE 的那一刻——幾十個群組、幾百則未讀——你知道那個焦慮感。
+LINE 是台灣人的生活基礎設施。2,100 萬月活用戶，71% 用它工作。但每天打開 LINE 的那一刻——幾十個群組、幾百則未讀——你知道那個焦慮感。
 
 **LINE Smart Digest** 在背景讀取你的 LINE 訊息，每天早上用 AI 產生一份摘要：誰在找你、什麼事要回、什麼可以不看。30 秒看完，取代 30 分鐘的逐則滾動。
 
@@ -49,7 +49,7 @@ LINE 的營收來自官方帳號推播（按訊息收費）和聊天列表廣告
 
 幫你過濾噪音 = 砍自己營收。他們不會做。
 
-而且公私分離是 LINE WORKS（月費 ¥450-800/人）的核心賣點。免費版解決這個問題 = 殺掉付費版。
+而且公私分離是 LINE WORKS（企業付費方案）的核心賣點。免費版解決這個問題 = 殺掉付費版。
 
 **你的焦慮是 LINE 的商業模式。這不是 bug，是 feature。**
 
@@ -85,7 +85,7 @@ AI 摘要引擎 (Claude Haiku / Gemini Flash / 任何 LLM)
 
 ```bash
 # 1. Clone
-git clone https://github.com/dans-huang-pg/line-digest.git
+git clone https://github.com/dans-huang/line-digest.git
 cd line-digest
 
 # 2. 安裝
@@ -148,9 +148,9 @@ docker compose up -d digest-alice
 
 | 項目 | 費用 |
 |------|------|
-| Claude Haiku（一般用量） | ~NT$3/月 |
-| Claude Haiku（重度用量） | ~NT$15/月 |
-| Gemini Flash（一般用量） | ~NT$1.5/月 |
+| Claude Haiku（一般用量，每天 1 次摘要） | ~NT$10/月 |
+| Claude Haiku（重度用量，每天 3+ 次） | ~NT$45/月 |
+| Gemini Flash via OpenRouter（一般用量） | ~NT$1.5/月 |
 | 自架伺服器 | NT$0（你的電腦） |
 | Railway/Render 雲端 | ~NT$150/月 |
 
@@ -180,7 +180,7 @@ docker compose up -d digest-alice
 
 ## 為什麼做這個
 
-台灣有 1,500 萬人每天用 LINE 工作。他們的痛點——訊息轟炸、公私不分、已讀壓力——不會被 LINE 解決，因為這些痛點是 LINE 的營收來源。
+台灣有超過 1,400 萬人用 LINE 工作。他們的痛點——訊息轟炸、公私不分、已讀壓力——不會被 LINE 解決，因為這些痛點是 LINE 的營收來源。
 
 這個工具不是要取代 LINE。是在 LINE 不願意做的地方，幫你一把。
 
