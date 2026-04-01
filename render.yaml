@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: line-digest
+    runtime: docker
+    plan: starter
+    disk:
+      name: line-digest-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      - key: LLM_API_KEY
+        sync: false
+      - key: PORT
+        value: 3000

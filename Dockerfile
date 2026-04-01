@@ -14,4 +14,4 @@ COPY config.yaml ./
 VOLUME /app/data
 EXPOSE 3000
 
-CMD ["node", "dist/app.js"]
+CMD ["node", "dist/main.js"]
