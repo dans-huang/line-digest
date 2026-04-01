@@ -6,10 +6,13 @@ RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt
 WORKDIR /app
 
 COPY package*.json .npmrc ./
-RUN npm ci --production
+RUN npm ci
 
-COPY dist/ ./dist/
+COPY tsconfig.json ./
+COPY src/ ./src/
 COPY config.yaml ./
+
+RUN npx tsc
 
 VOLUME /app/data
 EXPOSE 3000
