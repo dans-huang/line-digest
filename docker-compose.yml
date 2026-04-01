@@ -1,24 +1,18 @@
-# docker-compose.yml
-# Each user gets their own service with isolated data volume.
-# To add a user: copy a service block, update paths, run --login.
+# Multi-user LINE Smart Digest
+#
+# One service handles all users. Each user onboards via the web UI.
 #
 # Usage:
-#   docker compose run --rm digest-wife node dist/main.js --login
-#   docker compose up -d digest-wife
+#   docker compose up -d
+#   Open http://localhost:3000 (dashboard)
+#   Send http://localhost:3000/join to anyone who wants to join
 
 services:
-  digest-wife:
+  line-digest:
     build: .
+    ports:
+      - "3000:3000"
     volumes:
-      - ./users/wife/data:/app/data
-      - ./users/wife/config.yaml:/app/config.yaml:ro
-    env_file: ./users/wife/.env
+      - ./data:/app/data
+    env_file: .env
     restart: unless-stopped
-
-  # digest-friend1:
-  #   build: .
-  #   volumes:
-  #     - ./users/friend1/data:/app/data
-  #     - ./users/friend1/config.yaml:/app/config.yaml:ro
-  #   env_file: ./users/friend1/.env
-  #   restart: unless-stopped

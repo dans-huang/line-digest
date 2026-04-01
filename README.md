@@ -154,7 +154,7 @@ docker compose up -d digest-alice
 | 自架伺服器 | NT$0（你的電腦） |
 | Railway/Render 雲端 | ~NT$150/月 |
 
----
+每人每月約 NT$1.5-7（Gemini API）。免費額度內幾乎零成本。
 
 ## Roadmap
 

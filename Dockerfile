@@ -9,7 +9,9 @@ COPY package*.json .npmrc ./
 RUN npm ci --production
 
 COPY dist/ ./dist/
+COPY config.yaml ./
 
 VOLUME /app/data
+EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/app.js"]

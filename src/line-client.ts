@@ -7,9 +7,10 @@ import { log, logError } from "./logger.js";
 import type { Config } from "./config.js";
 
 // HTTP/2-enabled fetch for LINE push connection.
-// @evex/linejs creates Request objects internally; undici can't parse them directly.
+// @evex/linejs calls fetch as either fetch(Request) or fetch(url, init).
+// We must pass through ALL options (headers, signal, body) or requests will silently fail.
 const h2Dispatcher = new undici.Agent({ allowH2: true });
-const h2Fetch = async (input: any): Promise<any> => {
+const h2Fetch = async (input: any, init?: any): Promise<any> => {
   if (input instanceof Request) {
     const url = input.url;
     const isPush = url.includes("/PUSH/");
@@ -29,14 +30,21 @@ const h2Fetch = async (input: any): Promise<any> => {
       method: input.method,
       headers: Object.fromEntries(input.headers.entries()),
       body,
+      signal: input.signal,
       duplex: "half" as any,
       dispatcher: h2Dispatcher,
     });
   }
-  return undici.fetch(input, { dispatcher: h2Dispatcher });
+  // String URL + init options: merge dispatcher with all caller options
+  return undici.fetch(input, { ...init, dispatcher: h2Dispatcher });
 };
 
 export type MessageHandler = (message: TalkMessage) => Promise<void>;
+
+export interface LoginCallbacks {
+  onQRUrl: (url: string) => void;
+  onPincode: (pin: string) => void;
+}
 
 export class LineClient {
   private client: Client | null = null;
@@ -82,41 +90,62 @@ export class LineClient {
     return this.authToken !== null;
   }
 
-  async login(): Promise<void> {
+  /**
+   * Try token login only. Returns true if successful, false if failed.
+   * Does NOT fall back to QR — caller decides what to do.
+   */
+  async tryTokenLogin(): Promise<boolean> {
+    if (!this.authToken) return false;
+
     const storage = new FileStorage(this.config.line.storagePath);
     const device = this.config.line.device as any;
 
-    if (this.authToken) {
-      log("LINE", "Attempting token login...");
-      try {
-        this.client = await loginWithAuthToken(this.authToken, {
-          device,
-          storage,
-          fetch: h2Fetch as any,
-        });
-        this.setupTokenRefresh();
-        await this.acquireMid();
-        log("LINE", "Token login successful.");
-        return;
-      } catch (err) {
-        logError("LINE", err);
-        log("LINE", "Token login failed, falling back to QR.");
-      }
+    log("LINE", "Attempting token login...");
+    try {
+      this.client = await loginWithAuthToken(this.authToken, {
+        device,
+        storage,
+        fetch: h2Fetch as any,
+      });
+      this.setupTokenRefresh();
+      await this.acquireMid();
+      log("LINE", "Token login successful.");
+      return true;
+    } catch (err) {
+      logError("LINE", err);
+      log("LINE", "Token login failed.");
+      this.authToken = null;
+      return false;
     }
+  }
+
+  /**
+   * QR code login. Uses web callbacks if provided, otherwise terminal fallback.
+   */
+  async loginWithQR(callbacks?: LoginCallbacks): Promise<void> {
+    const storage = new FileStorage(this.config.line.storagePath);
+    const device = this.config.line.device as any;
+
+    const defaultCallbacks: LoginCallbacks = {
+      onQRUrl: (url) => {
+        console.log("\nScan this QR code with LINE:\n");
+        qrcode.generate(url, { small: true }, (code: string) => {
+          console.log(code);
+        });
+        console.log("Or open:", url, "\n");
+      },
+      onPincode: (pin) => {
+        console.log(`Enter PIN in LINE app: ${pin}`);
+      },
+    };
+
+    const cb = callbacks ?? defaultCallbacks;
 
     log("LINE", "QR code login...");
     this.client = await loginWithQR(
       {
-        onReceiveQRUrl(url) {
-          console.log("\nScan this QR code with LINE:\n");
-          qrcode.generate(url, { small: true }, (code: string) => {
-            console.log(code);
-          });
-          console.log("Or open:", url, "\n");
-        },
-        onPincodeRequest(pincode) {
-          console.log(`Enter PIN in LINE app: ${pincode}`);
-        },
+        onReceiveQRUrl(url) { cb.onQRUrl(url); },
+        onPincodeRequest(pincode) { cb.onPincode(pincode); },
       },
       { device, storage, fetch: h2Fetch as any }
     );
@@ -132,6 +161,15 @@ export class LineClient {
 
     await this.acquireMid();
     log("LINE", "QR login successful.");
+  }
+
+  /**
+   * @deprecated Use tryTokenLogin() + loginWithQR() instead.
+   * Kept for CLI compatibility.
+   */
+  async login(callbacks?: LoginCallbacks): Promise<void> {
+    if (await this.tryTokenLogin()) return;
+    await this.loginWithQR(callbacks);
   }
 
   private async acquireMid(): Promise<void> {
