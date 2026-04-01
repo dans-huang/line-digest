@@ -35,6 +35,7 @@ LINE 不可能幫你解決這個問題。他們的營收來自你的焦慮——
 
 目前需要會一點技術（Node.js + terminal），之後會做到掃 QR code 就能用。
 
+試用（掃 QR 就能用）：line-digest.onrender.com/join
 開源免費：github.com/dans-huang/line-digest
 
 很早期，如果你也有 LINE 焦慮，歡迎試用或留言告訴我你最痛的點是什麼。

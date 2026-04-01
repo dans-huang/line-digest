@@ -51,6 +51,7 @@ LLM：支援 Anthropic Claude、Google Gemini、OpenRouter、任何 OpenAI-compa
 
 開源 MIT，你的訊息只存在你自己的機器上（除了送給 LLM 做摘要）。
 
+線上試用（掃 QR 就能用）：https://line-digest.onrender.com/join
 GitHub: https://github.com/dans-huang/line-digest
 
 目前很早期（MVP），歡迎：
@@ -59,7 +60,6 @@ GitHub: https://github.com/dans-huang/line-digest
 - Star 讓我知道有人需要這個
 
 已知限制：
-- 需要會用 terminal 和 Node.js（之後會做 one-click 部署）
 - 群組名稱顯示可能有問題（linejs API 限制）
 - 用的是非官方協議，理論上有被 LINE 封的風險（目前沒遇過）
 
